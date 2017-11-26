@@ -11,6 +11,6 @@ import android.arch.persistence.room.RoomDatabase;
  */
 @Database(entities = {Transaction.class}, version = 1)
 public abstract class FinanceDatabase extends RoomDatabase {
-    public abstract TransactionDao transationDao();
+    public abstract TransactionDao transactionDao();
 
 }

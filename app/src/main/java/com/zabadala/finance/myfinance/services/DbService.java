@@ -37,12 +37,13 @@ public class DbService extends Service {
     }
 
     public DbService() {
-
     }
 
     @Override
     public void onCreate(){
+        System.out.println("on create");
         if (db == null){
+            System.out.println("DB Null");
             db = Room.databaseBuilder(getApplicationContext(),
                     FinanceDatabase.class, "FinanceDB").build();
         }
@@ -52,7 +53,16 @@ public class DbService extends Service {
         thread.start();
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
+    }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId){
+        Message msg = mServiceHandler.obtainMessage();
+        msg.arg1 = startId;
+        mServiceHandler.sendMessage(msg);
+
+        // If we get killed, after returning from here, restart
+        return START_STICKY;
     }
 
     @Override
@@ -63,12 +73,17 @@ public class DbService extends Service {
     }
 
     private int addTransaction(Message msg){
+        FinanceDatabase db;
+
+        System.out.println("add Transaction");
         Transaction trasaction = new Transaction();
         trasaction.setTransactionAuthor("Piotr");
         trasaction.setTransactionCurrency("pln");
         trasaction.setTransactionValue(5);
         trasaction.setTransactionUserDate(new Date(new java.util.Date().getTime()).toString());
         trasaction.setTransactionUserDate(new Date(new java.util.Date().getTime()).toString());
+
+        db.transationDao().insertAll(trasaction);
         return 0;
     }
 
