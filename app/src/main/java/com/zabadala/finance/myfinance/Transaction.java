@@ -80,5 +80,4 @@ public class Transaction {
     @ColumnInfo(name = "transaction_author")
     String transactionAuthor;
 
-
 }

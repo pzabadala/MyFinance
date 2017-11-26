@@ -11,10 +11,13 @@ import android.os.Message;
 import android.os.Process;
 
 import com.zabadala.finance.myfinance.FinanceDatabase;
+import com.zabadala.finance.myfinance.Transaction;
+
+import java.sql.Date;
 
 public class DbService extends Service {
 
-    private FinanceDatabase db;
+    private static FinanceDatabase db = null;
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
 
@@ -26,28 +29,29 @@ public class DbService extends Service {
 
         @Override
         public void handleMessage(Message msg){
+
+            addTransaction(msg);
             stopSelf(msg.arg1);
         }
 
     }
 
     public DbService() {
-        db = Room.databaseBuilder(getApplicationContext(),
-                 FinanceDatabase.class, "FinanceDB").build();
+
     }
 
     @Override
     public void onCreate(){
+        if (db == null){
+            db = Room.databaseBuilder(getApplicationContext(),
+                    FinanceDatabase.class, "FinanceDB").build();
+        }
         db.transationDao();
-
         HandlerThread thread = new HandlerThread("ServiceStartArguments",
                 Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
-
-
-
 
     }
 
@@ -58,5 +62,14 @@ public class DbService extends Service {
         //throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    private int addTransaction(Message msg){
+        Transaction trasaction = new Transaction();
+        trasaction.setTransactionAuthor("Piotr");
+        trasaction.setTransactionCurrency("pln");
+        trasaction.setTransactionValue(5);
+        trasaction.setTransactionUserDate(new Date(new java.util.Date().getTime()).toString());
+        trasaction.setTransactionUserDate(new Date(new java.util.Date().getTime()).toString());
+        return 0;
+    }
 
 }
