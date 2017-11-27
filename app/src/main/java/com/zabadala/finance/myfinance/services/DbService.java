@@ -21,6 +21,9 @@ public class DbService extends Service {
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
 
+    public DbService() {
+    }
+
     class ServiceHandler extends Handler {
 
         public ServiceHandler(Looper looper){
@@ -29,14 +32,10 @@ public class DbService extends Service {
 
         @Override
         public void handleMessage(Message msg){
-
             addTransaction(msg);
             stopSelf(msg.arg1);
         }
 
-    }
-
-    public DbService() {
     }
 
     @Override
@@ -47,7 +46,6 @@ public class DbService extends Service {
             db = Room.databaseBuilder(getApplicationContext(),
                     FinanceDatabase.class, "FinanceDB").build();
         }
-        db.transationDao();
         HandlerThread thread = new HandlerThread("ServiceStartArguments",
                 Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
@@ -73,17 +71,14 @@ public class DbService extends Service {
     }
 
     private int addTransaction(Message msg){
-        FinanceDatabase db;
-
         System.out.println("add Transaction");
         Transaction trasaction = new Transaction();
         trasaction.setTransactionAuthor("Piotr");
         trasaction.setTransactionCurrency("pln");
         trasaction.setTransactionValue(5);
         trasaction.setTransactionUserDate(new Date(new java.util.Date().getTime()).toString());
-        trasaction.setTransactionUserDate(new Date(new java.util.Date().getTime()).toString());
-
-        db.transationDao().insertAll(trasaction);
+        trasaction.setTrasactionDate(new Date(new java.util.Date().getTime()).toString());
+        db.transactionDao().insertAll(trasaction);
         return 0;
     }
 
