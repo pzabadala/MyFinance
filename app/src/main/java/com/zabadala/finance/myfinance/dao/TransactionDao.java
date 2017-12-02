@@ -1,9 +1,11 @@
-package com.zabadala.finance.myfinance;
+package com.zabadala.finance.myfinance.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import com.zabadala.finance.myfinance.db.*;
+
 
 import java.util.List;
 
@@ -23,5 +25,14 @@ public interface TransactionDao {
         void insertAll(Transaction... transactions);
 
         @Delete
-        void delete(Transaction user);
+        void delete(Transaction transaction);
+
+        @Query("SELECT COUNT(*) FROM TRANSACTIONS")
+        Integer getCount();
+
+        @Query("DELETE FROM TRANSACTIONS")
+        void truncate();
+
+
+
 }

@@ -10,8 +10,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 
-import com.zabadala.finance.myfinance.FinanceDatabase;
-import com.zabadala.finance.myfinance.Transaction;
+import com.zabadala.finance.myfinance.db.*;
+import com.zabadala.finance.myfinance.dao.*;
+
 
 import java.sql.Date;
 
@@ -44,7 +45,9 @@ public class DbService extends Service {
         if (db == null){
             System.out.println("DB Null");
             db = Room.databaseBuilder(getApplicationContext(),
-                    FinanceDatabase.class, "FinanceDB").build();
+                    FinanceDatabase.class, "FinanceDB")
+                    .fallbackToDestructiveMigration()
+                    .build();
         }
         HandlerThread thread = new HandlerThread("ServiceStartArguments",
                 Process.THREAD_PRIORITY_BACKGROUND);

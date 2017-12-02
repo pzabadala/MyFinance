@@ -1,4 +1,4 @@
-package com.zabadala.finance.myfinance;
+package com.zabadala.finance.myfinance.db;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -62,7 +62,7 @@ public class Transaction {
         this.transactionAuthor = transactionAuthor;
     }
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int uid;
 
     @ColumnInfo(name = "transaction_date")
@@ -79,5 +79,7 @@ public class Transaction {
 
     @ColumnInfo(name = "transaction_author")
     String transactionAuthor;
+
+
 
 }
