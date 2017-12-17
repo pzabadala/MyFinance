@@ -11,7 +11,6 @@ import android.os.Message;
 import android.os.Process;
 
 import com.zabadala.finance.myfinance.db.*;
-import com.zabadala.finance.myfinance.dao.*;
 
 
 import java.sql.Date;

@@ -80,6 +80,14 @@ public class Transaction {
     @ColumnInfo(name = "transaction_author")
     String transactionAuthor;
 
+    @ColumnInfo(name = "account_id")
+    Integer accountId;
 
+    public Integer getAccountId() {
+        return accountId;
+    }
 
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
+    }
 }
