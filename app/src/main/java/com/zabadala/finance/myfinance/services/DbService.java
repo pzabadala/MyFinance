@@ -14,8 +14,14 @@ import com.zabadala.finance.myfinance.db.*;
 
 
 import java.sql.Date;
+import java.util.List;
 
 public class DbService extends Service {
+
+    public static final int ADD_TRANSATION = 1;
+    public static final int GET_TOP_TRANSACTIONS= 2;
+
+
 
     private static FinanceDatabase db = null;
     private Looper mServiceLooper;
@@ -32,7 +38,13 @@ public class DbService extends Service {
 
         @Override
         public void handleMessage(Message msg){
-            addTransaction(msg);
+            int what = msg.what;
+
+            if(what == ADD_TRANSATION){
+                addTransaction(msg);
+            } else if (what == GET_TOP_TRANSACTIONS){
+                List<Transaction> list = getTopTransaction(100);
+            }
             stopSelf(msg.arg1);
         }
 
@@ -82,6 +94,10 @@ public class DbService extends Service {
         trasaction.setTrasactionDate(new Date(new java.util.Date().getTime()).toString());
         db.transactionDao().insertAll(trasaction);
         return 0;
+    }
+
+    private List<Transaction> getTopTransaction(int count){
+        return db.transactionDao().getTopTransaction();
     }
 
 }

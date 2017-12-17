@@ -18,6 +18,9 @@ public interface TransactionDao {
         @Query("SELECT * FROM transactions")
         List<Transaction> getAll();
 
+        @Query("SELECT  * FROM transactions LIMIT 10")
+        List<Transaction> getTopTransaction();
+
         @Query("SELECT * FROM transactions WHERE uid IN (:transactionIds)")
         List<Transaction> loadAllByIds(int[] transactionIds);
     
