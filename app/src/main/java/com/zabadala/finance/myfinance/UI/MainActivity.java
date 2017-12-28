@@ -1,7 +1,9 @@
 package com.zabadala.finance.myfinance.UI;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,18 +11,20 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.zabadala.finance.myfinance.R;
 import com.zabadala.finance.myfinance.services.DbService;
 import com.zabadala.finance.myfinance.db.Transaction;
 import java.util.*;
+import android.arch.lifecycle.Observer;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnLongClickListener {
 
-    private List<Transaction> movieList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private TransactionAdapter mAdapter;
+    private TransactionAdapter transactionAdapter;
+    private TransactionViewModel transactionViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,17 +34,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
-        mAdapter = new TransactionAdapter(movieList);
+        transactionAdapter = new TransactionAdapter(new ArrayList<Transaction>());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+
+        recyclerView = findViewById(R.id.recycler_view);
+
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(transactionAdapter);
 
         prepareTransactionData();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addTransactionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,7 +54,16 @@ public class MainActivity extends AppCompatActivity {
                 addTransaction();
             }
         });
+
+        transactionViewModel = ViewModelProviders.of(this).get(TransactionViewModel.class);
+        transactionViewModel.getTransactions().observe(MainActivity.this, new Observer<List<Transaction>>() {
+            @Override
+            public void onChanged(@Nullable List<Transaction> transactions) {
+                transactionAdapter.addItems(transactions);
+            }
+        });
     }
+
 
     private void prepareTransactionData(){
 
@@ -58,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
     private void addTransaction(){
         Intent intent = new Intent(this, DbService.class);
         startService(intent);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        Transaction transaction = (Transaction) v.getTag();
+        transactionViewModel.deleteItem(transaction);
+        return true;
     }
 
 }

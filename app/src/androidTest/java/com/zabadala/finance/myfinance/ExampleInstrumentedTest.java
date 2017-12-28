@@ -28,16 +28,14 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
 
-    private int entitiesCount = 1000;
+    private int entitiesCount = 10;
     private FinanceDatabase db;
     private Transaction transaction;
 
     @Before
     public void createDBHandler(){
         Context context = InstrumentationRegistry.getTargetContext();
-        db = Room.databaseBuilder(context, FinanceDatabase.class, "FinanceDB")
-                .fallbackToDestructiveMigration()
-                .build();
+        db = FinanceDatabase.getDatabase(context);
     }
 
     @Test
@@ -50,7 +48,7 @@ public class ExampleInstrumentedTest {
     @Test
     public void testcountEntities(){
 
-        int count = 1000 - db.transactionDao().getCount();
+        int count = 10 - db.transactionDao().getCount();
         Log.d(this.getClass().toString(), "transaction count: -  " + count);
 
         for (int i = 0; i < count; i++) {

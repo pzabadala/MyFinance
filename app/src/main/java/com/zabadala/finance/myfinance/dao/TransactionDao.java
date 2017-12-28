@@ -1,5 +1,6 @@
 package com.zabadala.finance.myfinance.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -9,6 +10,8 @@ import com.zabadala.finance.myfinance.db.*;
 
 import java.util.List;
 
+import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
+
 /**
  * Created by pzaba on 2017-11-05.
  */
@@ -16,15 +19,15 @@ import java.util.List;
 public interface TransactionDao {
 
         @Query("SELECT * FROM transactions")
-        List<Transaction> getAll();
+        LiveData<List<Transaction>> getAll();
 
         @Query("SELECT  * FROM transactions LIMIT 10")
-        List<Transaction> getTopTransaction();
+        LiveData<List<Transaction>> getTopTransaction();
 
         @Query("SELECT * FROM transactions WHERE uid IN (:transactionIds)")
         List<Transaction> loadAllByIds(int[] transactionIds);
     
-        @Insert
+        @Insert(onConflict = REPLACE)
         void insertAll(Transaction... transactions);
 
         @Delete

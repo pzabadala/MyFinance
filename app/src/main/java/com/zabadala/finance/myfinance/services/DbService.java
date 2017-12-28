@@ -1,6 +1,7 @@
 package com.zabadala.finance.myfinance.services;
 
 import android.app.Service;
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Handler;
@@ -19,7 +20,7 @@ import java.util.List;
 public class DbService extends Service {
 
     public static final int ADD_TRANSATION = 1;
-    public static final int GET_TOP_TRANSACTIONS= 2;
+    public static final int GET_TOP_TRANSACTIONS= 3;
 
 
 
@@ -43,7 +44,7 @@ public class DbService extends Service {
             if(what == ADD_TRANSATION){
                 addTransaction(msg);
             } else if (what == GET_TOP_TRANSACTIONS){
-                List<Transaction> list = getTopTransaction(100);
+                LiveData<List<Transaction>> list = getTopTransaction(100);
             }
             stopSelf(msg.arg1);
         }
@@ -55,10 +56,7 @@ public class DbService extends Service {
         System.out.println("on create");
         if (db == null){
             System.out.println("DB Null");
-            db = Room.databaseBuilder(getApplicationContext(),
-                    FinanceDatabase.class, "FinanceDB")
-                    .fallbackToDestructiveMigration()
-                    .build();
+            db = FinanceDatabase.getDatabase(getApplicationContext());
         }
         HandlerThread thread = new HandlerThread("ServiceStartArguments",
                 Process.THREAD_PRIORITY_BACKGROUND);
@@ -96,7 +94,7 @@ public class DbService extends Service {
         return 0;
     }
 
-    private List<Transaction> getTopTransaction(int count){
+    private LiveData<List<Transaction>> getTopTransaction(int count){
         return db.transactionDao().getTopTransaction();
     }
 

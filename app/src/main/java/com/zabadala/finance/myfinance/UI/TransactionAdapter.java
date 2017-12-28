@@ -6,6 +6,7 @@ package com.zabadala.finance.myfinance.UI;
 
 import com.zabadala.finance.myfinance.R;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,14 @@ import com.zabadala.finance.myfinance.db.Transaction;
 
 import java.util.List;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.MyViewHolder> {
+public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
 
-    private List<Transaction> trasactionsList;
+    private List<Transaction> transactionsList;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class TransactionViewHolder extends RecyclerView.ViewHolder {
         public TextView transactionValue, transactionDate, transactionAuthor;
 
-        public MyViewHolder(View view) {
+        public TransactionViewHolder(View view) {
             super(view);
             transactionValue = (TextView) view.findViewById(R.id.transactionValue);
             transactionDate = (TextView) view.findViewById(R.id.transactionDate);
@@ -33,27 +34,39 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
 
     public TransactionAdapter(List<Transaction> trasactionsList) {
-        this.trasactionsList = trasactionsList;
+        this.transactionsList = trasactionsList;
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TransactionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.transaction_list_row, parent, false);
 
-        return new MyViewHolder(itemView);
+        return new TransactionViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        Transaction transaction = trasactionsList.get(position);
-        holder.transactionValue.setText(transaction.getTransactionValue());
+    public void onBindViewHolder(TransactionViewHolder holder, int position) {
+
+        Transaction transaction = transactionsList.get(position);
+
+        Integer transactionValue = transaction.getTransactionValue();
+        Log.d("TransactionAdapter", "Position: " + position + "TransactionValue: " + transactionValue);
+        holder.transactionValue.setText(Integer.toString(transactionValue));
         holder.transactionDate.setText(transaction.getTrasactionDate());
         holder.transactionAuthor.setText(transaction.getTransactionAuthor());
     }
 
     @Override
     public int getItemCount() {
-        return trasactionsList.size();
+        Log.d("TransactionAdapter", "transaction list size: "+ transactionsList.size());
+        return transactionsList.size();
     }
+
+    public void addItems(List<Transaction> transactionsList) {
+        this.transactionsList = transactionsList;
+        notifyDataSetChanged();
+    }
+
+
 }
