@@ -50,15 +50,16 @@ public class ExampleInstrumentedTest {
 
         int count = 10 - db.transactionDao().getCount();
         Log.d(this.getClass().toString(), "transaction count: -  " + count);
+        Random rand = new  Random(10);
 
         for (int i = 0; i < count; i++) {
             Transaction trasaction = new Transaction();
             trasaction.setTransactionAuthor("Piotr");
             trasaction.setTransactionCurrency("pln");
-            trasaction.setTransactionValue(new Random(100).nextInt());
+            trasaction.setTransactionValue(Math.abs(rand.nextInt())%100);
 
             trasaction.setTrasactionDate(new Date(new java.util.Date().getTime()).toString());
-            Long randomTime = TimeUnit.DAYS.toMillis( new Random(10).nextInt());
+            Long randomTime = TimeUnit.DAYS.toMillis( rand.nextInt());
             trasaction.setTransactionUserDate(new Date(new java.util.Date().getTime() - randomTime).toString());
             db.transactionDao().insertAll(trasaction);
         }

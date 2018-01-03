@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                addTransaction();
+                startActivity(new Intent(MainActivity.this, AddActivity.class));
             }
         });
 
